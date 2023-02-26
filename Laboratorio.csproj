@@ -193,6 +193,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\datatable\css\buttons.dataTables.min.css" />
     <Content Include="Content\datatable\css\jquery.dataTables.min.css" />
+    <Content Include="Content\datatable\css\responsive.dataTables.min.css" />
     <Content Include="Content\datatable\images\favicon.ico" />
     <Content Include="Content\datatable\images\sort_asc.png" />
     <Content Include="Content\datatable\images\sort_asc_disabled.png" />
@@ -200,6 +201,7 @@
     <Content Include="Content\datatable\images\sort_desc.png" />
     <Content Include="Content\datatable\images\sort_desc_disabled.png" />
     <Content Include="Content\datatable\js\dataTables.buttons.min.js" />
+    <Content Include="Content\datatable\js\dataTables.responsive.min.js" />
     <Content Include="Content\datatable\js\jquery.dataTables.min.js" />
     <Content Include="Content\fontawesome\css\all.css" />
     <Content Include="Content\fontawesome\css\all.min.css" />
