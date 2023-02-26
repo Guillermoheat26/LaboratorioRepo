@@ -1,0 +1,300 @@
+﻿
+@{
+    ViewBag.Title = "Tecnicos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row m-4">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <table class="display responsive nowrap" id="myTable" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Codigo</th>
+                            <th>Sueldo Base</th>
+                            <th>Nombre Sucursal</th>
+                            <th>Elementos</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="FormModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Datos Tecnico</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+
+
+                        <input type="hidden" id="txtIdTecnico" />
+                        <div class="form-group">
+                            <label for="txtNombre">Nombre:</label>
+                            <input type="text" class="form-control" id="txtNombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="txtCodigo">Codigo:</label>
+                            <input type="text" class="form-control" id="txtCodigo">
+                        </div>
+                        <div class="form-group">
+                            <label for="txtSueldo">Sueldo Base:</label>
+                            <input type="text" class="form-control" id="txtSueldo">
+                        </div>
+                        <div class="form-group">
+                            <label for="txtSucursal">Sucursal:</label>
+                            <select class="form-control" id="selectSucursal">
+                                <option value="">Seleccione una sucursal</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="txtElementos">Elementos:</label>
+                            <div id="elementosContainer">
+                                <div class="input-group">
+                                    <select class="form-control" id="selectElemento">
+                                        <option value="">Seleccione un elemento</option>
+                                        <option value="elemento1">Elemento 1</option>
+                                        <option value="elemento2">Elemento 2</option>
+                                        <option value="elemento3">Elemento 3</option>
+                                    </select>
+                                    <input type="number" style=" width: 60px;" class="form-control" id="txtCantidadElementos" min="1" max="10" value="1" oninput="validarCantidad()">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-success" onclick="agregarElemento()">Add</button>
+                                        <button class="btn btn-danger btn-sm ml-2" type="button" onclick="eliminarElemento(this)"><i class='fa fa-trash'></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script>
+        var tabla_persona;
+         $(document).ready( function () {
+             tabla_persona = $('#myTable').DataTable({
+                "ajax": {
+                    "url": "@Url.Action("Listar", "Tecnico")",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { "data": "nombre" },
+                    { "data": "codigo" },
+                    { "data": "sueldo_base" },
+                    { "data": "nombre_sucursal" },
+                    { "data": "elementos" },
+                    { "data": "id_tecnico", "render": function (data) {
+                            return "<button class='btn btn-primary btn-sm' type='button' onclick='abrirModal(" + data + ")'><i class='fas fa-pen'></i></button>" +
+                                "<button class='btn btn-danger btn-sm ml-2' type='button' onclick='Eliminar(" + data + ")'><i class='fa fa-trash'></i></button>"
+                        },
+                        "orderable": false,
+                        "searchable": false,
+                        "width": "150px"
+                    }
+                ],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        text: 'Agregar Nuevo',
+                        attr: { class: 'btn btn-success btn-sm' },
+                        action: function (e, dt, node, config) {
+                            abrirModal(0)
+                        }
+                    }
+                 ],
+                 "language": {
+                     "url": "@Url.Content("~/Content/datatable/idioma/datatable.es-ES.json")"
+                 }
+
+            });
+        });
+
+
+        function abrirModal($id_tecnico) {
+            $("#txtIdTecnico").val($id_tecnico);
+            if ($id_tecnico != 0) {
+
+                jQuery.ajax({
+                    url: "@Url.Action("Obtener","Tecnico")" + "?idtecnico=" + $id_tecnico,
+                    type: "GET",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        if (data != null) {
+                            $("#txtNombre").val(data[0].nombre);
+                            $("#txtCodigo").val(data[0].codigo);
+                            $("#txtSueldo").val(data[0].sueldo_base);
+                            $("#selectElemento").val(data[0].elementos);
+                        }
+
+                    }
+                });
+            } else {
+                $("#txtNombre").val("");
+                $("#txtCodigo").val("");
+                $("#txtSueldo").val("");
+                $("#selectSucursal").val("");
+                $("#selectElemento").val("");
+            }
+
+            $('#FormModal').modal('show');
+
+        }
+
+        function Guardar() {
+            var $data = {
+                oPersona: {
+                    IdPersona: parseInt($("#txtIdPersona").val()),
+                    Nombre: $("#txtNombre").val(),
+                    Apellidos: $("#txtApellidos").val(),
+                    Correo: $("#txtCorreo").val(),
+                }
+            }
+
+            jQuery.ajax({
+                url: "@Url.Action("Guardar", "Persona")",
+                type: "POST",
+                data: JSON.stringify($data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.resultado) {
+                        tabla_persona.ajax.reload();
+                        $('#FormModal').modal('hide');
+                    } else {
+                        alert("No se pudo guardar los cambios");
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                },
+                beforeSend: function () {
+
+                }
+            });
+
+        }
+
+
+        function agregarElemento() {
+            var elementoBase = $('#elementosContainer .input-group').first().clone(); // Clona la fila inicial
+            elementoBase.find('select').val(''); // Reinicia el valor del select
+            elementoBase.find('input').val('1'); // Reinicia el valor del input
+            $('#elementosContainer').append(elementoBase); // Agrega la nueva fila al contenedor
+        }
+
+        function eliminarElemento(btn) {
+            // Obtener el elemento a eliminar
+            var elemento = btn.parentNode.parentNode;
+            // Obtener el elemento padre
+            var contenedor = elemento.parentNode;
+            // Verificar si hay más de un elemento
+            if (contenedor.children.length > 1) {
+                // Eliminar el elemento
+                contenedor.removeChild(elemento);
+            }
+            // De lo contrario, no hacer nada
+        }
+
+
+       $.ajax({
+        type: 'GET',
+        url: '@Url.Action("ListarSucursales", "Tecnico")',
+           success: function (data) {
+               // Agregar la opción correspondiente al nombre de la sucursal
+               //select.append($('<option>', {
+               //    value: data[0].id_sucursal,
+               //    text: data[0].nombre_sucursal,
+               //    selected: true
+               //}));
+            var combo = $('#selectSucursal');
+
+            var selectedValue = combo.val(); // Guarda el valor seleccionado actualmente
+
+            combo.empty(); // Vaciar el combo
+            // Vacía el select y agrega la opción por defecto
+            combo.empty().append($('<option></option>').val('').html('Seleccione una sucursal'));
+
+
+            // Agregar cada sucursal a la lista de opciones del combo box
+            $.each(data.data, function (i, sucursal) {
+                combo.append($('<option></option>').val(sucursal.split(" - ")[0]).html(sucursal.split(" - ")[2]));
+            });
+
+            combo.val(selectedValue); // Restaura el valor seleccionado anteriormente
+
+        }
+        });
+
+        function validarCantidad() {
+            var inputCantidad = document.getElementById("txtCantidadElementos");
+            var cantidad = inputCantidad.value;
+
+            if (cantidad < 1) {
+                inputCantidad.value = 1;
+            } else if (cantidad > 10) {
+                inputCantidad.value = 10;
+            }
+        }
+
+
+         function Eliminar($id_tecnico) {
+            if (confirm("¿Realmente desea eliminar?")) {
+                jQuery.ajax({
+                    url: "@Url.Action("Eliminar", "Tecnico")" + "?idtecnico=" + $id_tecnico,
+                    type: "GET",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        if (data.resultado) {
+                            tabla_persona.ajax.reload();
+                        }
+                    }
+                });
+
+
+            }
+        }
+
+
+    </script>
+
+
+
+}

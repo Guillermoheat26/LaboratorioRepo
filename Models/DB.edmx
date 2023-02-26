@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="LABModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Elementos">
+          <Key>
+            <PropertyRef Name="id_elemento" />
+          </Key>
+          <Property Name="id_elemento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codigo" Type="varchar" MaxLength="10" />
+          <Property Name="nombre" Type="varchar" MaxLength="50" />
+          <Property Name="cantidad" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sucursal">
+          <Key>
+            <PropertyRef Name="id_sucursal" />
+          </Key>
+          <Property Name="id_sucursal" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codigo" Type="varchar" MaxLength="10" />
+          <Property Name="nombre" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Tecnico">
+          <Key>
+            <PropertyRef Name="id_tecnico" />
+          </Key>
+          <Property Name="id_tecnico" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="50" />
+          <Property Name="codigo" Type="varchar" MaxLength="10" />
+          <Property Name="sueldo_base" Type="decimal" Precision="10" Scale="2" />
+        </EntityType>
+        <EntityType Name="Tecnico_Elementos">
+          <Key>
+            <PropertyRef Name="id_tecnico_elemento" />
+          </Key>
+          <Property Name="id_tecnico_elemento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_tecnico" Type="int" />
+          <Property Name="id_elemento" Type="int" />
+          <Property Name="cantidad" Type="int" />
+        </EntityType>
+        <EntityType Name="Tecnico_Sucursal">
+          <Key>
+            <PropertyRef Name="id_tecnico_sucursal" />
+          </Key>
+          <Property Name="id_tecnico_sucursal" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_tecnico" Type="int" />
+          <Property Name="id_sucursal" Type="int" />
+        </EntityType>
+        <Association Name="fk_tecnico_elemento_elemento">
+          <End Role="Elementos" Type="Self.Elementos" Multiplicity="0..1" />
+          <End Role="Tecnico_Elementos" Type="Self.Tecnico_Elementos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Elementos">
+              <PropertyRef Name="id_elemento" />
+            </Principal>
+            <Dependent Role="Tecnico_Elementos">
+              <PropertyRef Name="id_elemento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_tecnico_elemento_tecnico">
+          <End Role="Tecnico" Type="Self.Tecnico" Multiplicity="0..1" />
+          <End Role="Tecnico_Elementos" Type="Self.Tecnico_Elementos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tecnico">
+              <PropertyRef Name="id_tecnico" />
+            </Principal>
+            <Dependent Role="Tecnico_Elementos">
+              <PropertyRef Name="id_tecnico" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_tecnico_sucursal_sucursal">
+          <End Role="Sucursal" Type="Self.Sucursal" Multiplicity="0..1" />
+          <End Role="Tecnico_Sucursal" Type="Self.Tecnico_Sucursal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sucursal">
+              <PropertyRef Name="id_sucursal" />
+            </Principal>
+            <Dependent Role="Tecnico_Sucursal">
+              <PropertyRef Name="id_sucursal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_tecnico_sucursal_tecnico">
+          <End Role="Tecnico" Type="Self.Tecnico" Multiplicity="0..1" />
+          <End Role="Tecnico_Sucursal" Type="Self.Tecnico_Sucursal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tecnico">
+              <PropertyRef Name="id_tecnico" />
+            </Principal>
+            <Dependent Role="Tecnico_Sucursal">
+              <PropertyRef Name="id_tecnico" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="LABModelStoreContainer">
+          <EntitySet Name="Elementos" EntityType="Self.Elementos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sucursal" EntityType="Self.Sucursal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tecnico" EntityType="Self.Tecnico" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tecnico_Elementos" EntityType="Self.Tecnico_Elementos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tecnico_Sucursal" EntityType="Self.Tecnico_Sucursal" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="fk_tecnico_elemento_elemento" Association="Self.fk_tecnico_elemento_elemento">
+            <End Role="Elementos" EntitySet="Elementos" />
+            <End Role="Tecnico_Elementos" EntitySet="Tecnico_Elementos" />
+          </AssociationSet>
+          <AssociationSet Name="fk_tecnico_elemento_tecnico" Association="Self.fk_tecnico_elemento_tecnico">
+            <End Role="Tecnico" EntitySet="Tecnico" />
+            <End Role="Tecnico_Elementos" EntitySet="Tecnico_Elementos" />
+          </AssociationSet>
+          <AssociationSet Name="fk_tecnico_sucursal_sucursal" Association="Self.fk_tecnico_sucursal_sucursal">
+            <End Role="Sucursal" EntitySet="Sucursal" />
+            <End Role="Tecnico_Sucursal" EntitySet="Tecnico_Sucursal" />
+          </AssociationSet>
+          <AssociationSet Name="fk_tecnico_sucursal_tecnico" Association="Self.fk_tecnico_sucursal_tecnico">
+            <End Role="Tecnico" EntitySet="Tecnico" />
+            <End Role="Tecnico_Sucursal" EntitySet="Tecnico_Sucursal" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="LABModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Elementos">
+          <Key>
+            <PropertyRef Name="id_elemento" />
+          </Key>
+          <Property Name="id_elemento" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codigo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cantidad" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Tecnico_Elementos" Relationship="Self.fk_tecnico_elemento_elemento" FromRole="Elementos" ToRole="Tecnico_Elementos" />
+        </EntityType>
+        <EntityType Name="Sucursal">
+          <Key>
+            <PropertyRef Name="id_sucursal" />
+          </Key>
+          <Property Name="id_sucursal" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codigo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Tecnico_Sucursal" Relationship="Self.fk_tecnico_sucursal_sucursal" FromRole="Sucursal" ToRole="Tecnico_Sucursal" />
+        </EntityType>
+        <EntityType Name="Tecnico">
+          <Key>
+            <PropertyRef Name="id_tecnico" />
+          </Key>
+          <Property Name="id_tecnico" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="codigo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="sueldo_base" Type="Decimal" Precision="10" Scale="2" />
+          <NavigationProperty Name="Tecnico_Elementos" Relationship="Self.fk_tecnico_elemento_tecnico" FromRole="Tecnico" ToRole="Tecnico_Elementos" />
+          <NavigationProperty Name="Tecnico_Sucursal" Relationship="Self.fk_tecnico_sucursal_tecnico" FromRole="Tecnico" ToRole="Tecnico_Sucursal" />
+        </EntityType>
+        <EntityType Name="Tecnico_Elementos">
+          <Key>
+            <PropertyRef Name="id_tecnico_elemento" />
+          </Key>
+          <Property Name="id_tecnico_elemento" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_tecnico" Type="Int32" />
+          <Property Name="id_elemento" Type="Int32" />
+          <Property Name="cantidad" Type="Int32" />
+          <NavigationProperty Name="Elementos" Relationship="Self.fk_tecnico_elemento_elemento" FromRole="Tecnico_Elementos" ToRole="Elementos" />
+          <NavigationProperty Name="Tecnico" Relationship="Self.fk_tecnico_elemento_tecnico" FromRole="Tecnico_Elementos" ToRole="Tecnico" />
+        </EntityType>
+        <EntityType Name="Tecnico_Sucursal">
+          <Key>
+            <PropertyRef Name="id_tecnico_sucursal" />
+          </Key>
+          <Property Name="id_tecnico_sucursal" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_tecnico" Type="Int32" />
+          <Property Name="id_sucursal" Type="Int32" />
+          <NavigationProperty Name="Sucursal" Relationship="Self.fk_tecnico_sucursal_sucursal" FromRole="Tecnico_Sucursal" ToRole="Sucursal" />
+          <NavigationProperty Name="Tecnico" Relationship="Self.fk_tecnico_sucursal_tecnico" FromRole="Tecnico_Sucursal" ToRole="Tecnico" />
+        </EntityType>
+        <Association Name="fk_tecnico_elemento_elemento">
+          <End Role="Elementos" Type="Self.Elementos" Multiplicity="0..1" />
+          <End Role="Tecnico_Elementos" Type="Self.Tecnico_Elementos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Elementos">
+              <PropertyRef Name="id_elemento" />
+            </Principal>
+            <Dependent Role="Tecnico_Elementos">
+              <PropertyRef Name="id_elemento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_tecnico_sucursal_sucursal">
+          <End Role="Sucursal" Type="Self.Sucursal" Multiplicity="0..1" />
+          <End Role="Tecnico_Sucursal" Type="Self.Tecnico_Sucursal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sucursal">
+              <PropertyRef Name="id_sucursal" />
+            </Principal>
+            <Dependent Role="Tecnico_Sucursal">
+              <PropertyRef Name="id_sucursal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_tecnico_elemento_tecnico">
+          <End Role="Tecnico" Type="Self.Tecnico" Multiplicity="0..1" />
+          <End Role="Tecnico_Elementos" Type="Self.Tecnico_Elementos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tecnico">
+              <PropertyRef Name="id_tecnico" />
+            </Principal>
+            <Dependent Role="Tecnico_Elementos">
+              <PropertyRef Name="id_tecnico" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_tecnico_sucursal_tecnico">
+          <End Role="Tecnico" Type="Self.Tecnico" Multiplicity="0..1" />
+          <End Role="Tecnico_Sucursal" Type="Self.Tecnico_Sucursal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tecnico">
+              <PropertyRef Name="id_tecnico" />
+            </Principal>
+            <Dependent Role="Tecnico_Sucursal">
+              <PropertyRef Name="id_tecnico" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="LABEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Elementos" EntityType="Self.Elementos" />
+          <EntitySet Name="Sucursal" EntityType="Self.Sucursal" />
+          <EntitySet Name="Tecnico" EntityType="Self.Tecnico" />
+          <EntitySet Name="Tecnico_Elementos" EntityType="Self.Tecnico_Elementos" />
+          <EntitySet Name="Tecnico_Sucursal" EntityType="Self.Tecnico_Sucursal" />
+          <AssociationSet Name="fk_tecnico_elemento_elemento" Association="Self.fk_tecnico_elemento_elemento">
+            <End Role="Elementos" EntitySet="Elementos" />
+            <End Role="Tecnico_Elementos" EntitySet="Tecnico_Elementos" />
+          </AssociationSet>
+          <AssociationSet Name="fk_tecnico_sucursal_sucursal" Association="Self.fk_tecnico_sucursal_sucursal">
+            <End Role="Sucursal" EntitySet="Sucursal" />
+            <End Role="Tecnico_Sucursal" EntitySet="Tecnico_Sucursal" />
+          </AssociationSet>
+          <AssociationSet Name="fk_tecnico_elemento_tecnico" Association="Self.fk_tecnico_elemento_tecnico">
+            <End Role="Tecnico" EntitySet="Tecnico" />
+            <End Role="Tecnico_Elementos" EntitySet="Tecnico_Elementos" />
+          </AssociationSet>
+          <AssociationSet Name="fk_tecnico_sucursal_tecnico" Association="Self.fk_tecnico_sucursal_tecnico">
+            <End Role="Tecnico" EntitySet="Tecnico" />
+            <End Role="Tecnico_Sucursal" EntitySet="Tecnico_Sucursal" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="LABModelStoreContainer" CdmEntityContainer="LABEntities">
+          <EntitySetMapping Name="Elementos">
+            <EntityTypeMapping TypeName="LABModel.Elementos">
+              <MappingFragment StoreEntitySet="Elementos">
+                <ScalarProperty Name="id_elemento" ColumnName="id_elemento" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sucursal">
+            <EntityTypeMapping TypeName="LABModel.Sucursal">
+              <MappingFragment StoreEntitySet="Sucursal">
+                <ScalarProperty Name="id_sucursal" ColumnName="id_sucursal" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tecnico">
+            <EntityTypeMapping TypeName="LABModel.Tecnico">
+              <MappingFragment StoreEntitySet="Tecnico">
+                <ScalarProperty Name="id_tecnico" ColumnName="id_tecnico" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="sueldo_base" ColumnName="sueldo_base" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tecnico_Elementos">
+            <EntityTypeMapping TypeName="LABModel.Tecnico_Elementos">
+              <MappingFragment StoreEntitySet="Tecnico_Elementos">
+                <ScalarProperty Name="id_tecnico_elemento" ColumnName="id_tecnico_elemento" />
+                <ScalarProperty Name="id_tecnico" ColumnName="id_tecnico" />
+                <ScalarProperty Name="id_elemento" ColumnName="id_elemento" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tecnico_Sucursal">
+            <EntityTypeMapping TypeName="LABModel.Tecnico_Sucursal">
+              <MappingFragment StoreEntitySet="Tecnico_Sucursal">
+                <ScalarProperty Name="id_tecnico_sucursal" ColumnName="id_tecnico_sucursal" />
+                <ScalarProperty Name="id_tecnico" ColumnName="id_tecnico" />
+                <ScalarProperty Name="id_sucursal" ColumnName="id_sucursal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

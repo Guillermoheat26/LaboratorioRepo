@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="LABModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Elementos">
+    <Key>
+      <PropertyRef Name="id_elemento" />
+    </Key>
+    <Property Name="id_elemento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="codigo" Type="varchar" MaxLength="10" />
+    <Property Name="nombre" Type="varchar" MaxLength="50" />
+    <Property Name="cantidad" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Sucursal">
+    <Key>
+      <PropertyRef Name="id_sucursal" />
+    </Key>
+    <Property Name="id_sucursal" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="codigo" Type="varchar" MaxLength="10" />
+    <Property Name="nombre" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Tecnico">
+    <Key>
+      <PropertyRef Name="id_tecnico" />
+    </Key>
+    <Property Name="id_tecnico" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="nombre" Type="varchar" MaxLength="50" />
+    <Property Name="codigo" Type="varchar" MaxLength="10" />
+    <Property Name="sueldo_base" Type="decimal" Precision="10" Scale="2" />
+  </EntityType>
+  <EntityType Name="Tecnico_Elementos">
+    <Key>
+      <PropertyRef Name="id_tecnico_elemento" />
+    </Key>
+    <Property Name="id_tecnico_elemento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_tecnico" Type="int" />
+    <Property Name="id_elemento" Type="int" />
+    <Property Name="cantidad" Type="int" />
+  </EntityType>
+  <EntityType Name="Tecnico_Sucursal">
+    <Key>
+      <PropertyRef Name="id_tecnico_sucursal" />
+    </Key>
+    <Property Name="id_tecnico_sucursal" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_tecnico" Type="int" />
+    <Property Name="id_sucursal" Type="int" />
+  </EntityType>
+  <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'LAB.dbo.v_Tecnico_Suc_Ele' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+  <EntityType Name="v_Tecnico_Suc_Ele">
+    <Key>
+      <PropertyRef Name="id_tecnico" />
+    </Key>
+    <Property Name="id_tecnico" Type="int" Nullable="false" />
+    <Property Name="nombre" Type="varchar" MaxLength="50" />
+    <Property Name="codigo" Type="varchar" MaxLength="10" />
+    <Property Name="sueldo_base" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="nombre_sucursal" Type="varchar" MaxLength="50" />
+    <Property Name="elementos" Type="nvarchar(max)" />
+  </EntityType>
+  <Association Name="fk_tecnico_elemento_elemento">
+    <End Role="Elementos" Type="Self.Elementos" Multiplicity="0..1" />
+    <End Role="Tecnico_Elementos" Type="Self.Tecnico_Elementos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Elementos">
+        <PropertyRef Name="id_elemento" />
+      </Principal>
+      <Dependent Role="Tecnico_Elementos">
+        <PropertyRef Name="id_elemento" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_tecnico_elemento_tecnico">
+    <End Role="Tecnico" Type="Self.Tecnico" Multiplicity="0..1" />
+    <End Role="Tecnico_Elementos" Type="Self.Tecnico_Elementos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tecnico">
+        <PropertyRef Name="id_tecnico" />
+      </Principal>
+      <Dependent Role="Tecnico_Elementos">
+        <PropertyRef Name="id_tecnico" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_tecnico_sucursal_sucursal">
+    <End Role="Sucursal" Type="Self.Sucursal" Multiplicity="0..1" />
+    <End Role="Tecnico_Sucursal" Type="Self.Tecnico_Sucursal" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sucursal">
+        <PropertyRef Name="id_sucursal" />
+      </Principal>
+      <Dependent Role="Tecnico_Sucursal">
+        <PropertyRef Name="id_sucursal" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_tecnico_sucursal_tecnico">
+    <End Role="Tecnico" Type="Self.Tecnico" Multiplicity="0..1" />
+    <End Role="Tecnico_Sucursal" Type="Self.Tecnico_Sucursal" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tecnico">
+        <PropertyRef Name="id_tecnico" />
+      </Principal>
+      <Dependent Role="Tecnico_Sucursal">
+        <PropertyRef Name="id_tecnico" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="LABModel1StoreContainer">
+    <EntitySet Name="Elementos" EntityType="Self.Elementos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Sucursal" EntityType="Self.Sucursal" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Tecnico" EntityType="Self.Tecnico" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Tecnico_Elementos" EntityType="Self.Tecnico_Elementos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Tecnico_Sucursal" EntityType="Self.Tecnico_Sucursal" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="v_Tecnico_Suc_Ele" EntityType="Self.v_Tecnico_Suc_Ele" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [v_Tecnico_Suc_Ele].[id_tecnico] AS [id_tecnico], 
+    [v_Tecnico_Suc_Ele].[nombre] AS [nombre], 
+    [v_Tecnico_Suc_Ele].[codigo] AS [codigo], 
+    [v_Tecnico_Suc_Ele].[sueldo_base] AS [sueldo_base], 
+    [v_Tecnico_Suc_Ele].[nombre_sucursal] AS [nombre_sucursal], 
+    [v_Tecnico_Suc_Ele].[elementos] AS [elementos]
+    FROM [dbo].[v_Tecnico_Suc_Ele] AS [v_Tecnico_Suc_Ele]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="fk_tecnico_elemento_elemento" Association="Self.fk_tecnico_elemento_elemento">
+      <End Role="Elementos" EntitySet="Elementos" />
+      <End Role="Tecnico_Elementos" EntitySet="Tecnico_Elementos" />
+    </AssociationSet>
+    <AssociationSet Name="fk_tecnico_elemento_tecnico" Association="Self.fk_tecnico_elemento_tecnico">
+      <End Role="Tecnico" EntitySet="Tecnico" />
+      <End Role="Tecnico_Elementos" EntitySet="Tecnico_Elementos" />
+    </AssociationSet>
+    <AssociationSet Name="fk_tecnico_sucursal_sucursal" Association="Self.fk_tecnico_sucursal_sucursal">
+      <End Role="Sucursal" EntitySet="Sucursal" />
+      <End Role="Tecnico_Sucursal" EntitySet="Tecnico_Sucursal" />
+    </AssociationSet>
+    <AssociationSet Name="fk_tecnico_sucursal_tecnico" Association="Self.fk_tecnico_sucursal_tecnico">
+      <End Role="Tecnico" EntitySet="Tecnico" />
+      <End Role="Tecnico_Sucursal" EntitySet="Tecnico_Sucursal" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
