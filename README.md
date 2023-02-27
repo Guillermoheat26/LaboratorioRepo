@@ -36,7 +36,25 @@ Editar
 
 
 
+## Librerias Usadas
+- JQuery
+- Bootstrap
 
+## Lenguajes
+
+- C#
+- JavaScript
+- csHTML
+
+## Librerias Instaladas
+
+https://datatables.net/download/packages
+
+https://datatables.net/plug-ins/i18n/Spanish
+
+https://datatables.net/extensions/responsive/examples/initialisation/className.html
+
+https://datatables.net/extensions/buttons/examples/initialisation/custom.html
 
 ## Licencia
 
