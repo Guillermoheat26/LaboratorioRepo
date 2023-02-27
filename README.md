@@ -1,11 +1,12 @@
 # Reto Tecnico Laboratorio ASP.NET - MVC
 
+![screenshot project](https://github.com/Guillermoheat26/LaboratorioRepo/blob/main/blob/capturas/Inicial.png)
 Aplicación web en C# MVC que permita almacenar la información básica de algunos tecnicos
 
 ## Requisitos previos
 
-- Visual Studio
-- .NET Framework
+- Visual Studio Community 2022
+- .NET Framework 4.8
 - SQL Server
 
 ## Instrucciones de instalación
@@ -17,13 +18,25 @@ Aplicación web en C# MVC que permita almacenar la información básica de algun
 4. Actualiza la cadena de conexión a la base de datos en el archivo Web.config.
 5. Ejecuta la aplicación.
 
-## Contribuyendo
+## Evidencias de Funcionalidad
 
-1. Crea un fork del proyecto.
-2. Crea una rama para tu nueva funcionalidad o corrección de errores (por ejemplo, `git checkout -b nueva-funcionalidad`).
-3. Realiza tus cambios y haz commit de los mismos (por ejemplo, `git commit -am "Agrega nueva funcionalidad"`).
-4. Realiza un push de la rama a tu fork (por ejemplo, `git push origin nueva-funcionalidad`).
-5. Abre un pull request en el repositorio original.
+Crear nuevo
+![screenshot project](https://github.com/Guillermoheat26/LaboratorioRepo/blob/main/blob/capturas/Crear%20Nuevo.png)
+Sucursales Mediante la BD
+![screenshot project](https://github.com/Guillermoheat26/LaboratorioRepo/blob/main/blob/capturas/Sucursal.png)
+Elementos Mediante la BD
+![screenshot project](https://github.com/Guillermoheat26/LaboratorioRepo/blob/main/blob/capturas/Elementos.png)
+Nuevo Creado
+![screenshot project](https://github.com/Guillermoheat26/LaboratorioRepo/blob/main/blob/capturas/Nuevo%20Creado.png)
+Eliminar
+![screenshot project](https://github.com/Guillermoheat26/LaboratorioRepo/blob/main/blob/capturas/Eliminar%20Creado.png)
+Editar
+![screenshot project](https://github.com/Guillermoheat26/LaboratorioRepo/blob/main/blob/capturas/Editar.png)
+![screenshot project](https://github.com/Guillermoheat26/LaboratorioRepo/blob/main/blob/capturas/Editado.png)
+
+
+
+
 
 ## Licencia
 
