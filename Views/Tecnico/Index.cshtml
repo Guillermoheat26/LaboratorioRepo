@@ -68,19 +68,23 @@
                         <div class="form-group">
                             <label for="txtElementos">Elementos:</label>
                             <div id="elementosContainer">
-                                <div class="input-group">
-                                    <select class="form-control" id="selectElemento">
-                                        <option value="">Seleccione un elemento</option>
-                                        <option value="elemento1">Elemento 1</option>
-                                        <option value="elemento2">Elemento 2</option>
-                                        <option value="elemento3">Elemento 3</option>
-                                    </select>
-                                    <input type="number" style=" width: 60px;" class="form-control" id="txtCantidadElementos" min="1" max="10" value="1" oninput="validarCantidad()">
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-success" onclick="agregarElemento()">Add</button>
-                                        <button class="btn btn-danger btn-sm ml-2" type="button" onclick="eliminarElemento(this)"><i class='fa fa-trash'></i></button>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <h4>Disponible</h4>
+                                        <select class="form-control" id="select-disponible" multiple></select>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <br><br>
+                                        <button class="btn btn-primary" id="btn-agregar"><i class="fa fa-chevron-right"></i></button>
+                                        <br><br>
+                                        <button class="btn btn-primary" id="btn-quitar"><i class="fa fa-chevron-left"></i></button>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <h4>Seleccionado</h4>
+                                        <select class="form-control" id="select-seleccionado" multiple></select>
                                     </div>
                                 </div>
+
                             </div>
                             
                         </div>
@@ -145,6 +149,7 @@
 
 
         function abrirModal($id_tecnico) {
+            alert($id_tecnico);
             $("#txtIdTecnico").val($id_tecnico);
             if ($id_tecnico != 0) {
 
@@ -176,19 +181,20 @@
         }
 
         function Guardar() {
-            var $data = {
-                oPersona: {
-                    IdPersona: parseInt($("#txtIdPersona").val()),
-                    Nombre: $("#txtNombre").val(),
-                    Apellidos: $("#txtApellidos").val(),
-                    Correo: $("#txtCorreo").val(),
-                }
-            }
-
+            var opcionesSeleccionadas = $('#select-seleccionado').val();
+            var opcionesConcatenadas = opcionesSeleccionadas.join(',');
+            console.log(parseInt($("#txtIdTecnico").val()));  
             jQuery.ajax({
-                url: "@Url.Action("Guardar", "Persona")",
+                url: "@Url.Action("Guardar", "Tecnico")",
                 type: "POST",
-                data: JSON.stringify($data),
+                data: JSON.stringify({
+                    id_tecnico: parseInt($("#txtIdTecnico").val()),
+                    nombre: $("#txtNombre").val(),
+                    codigo: $("#txtCodigo").val(),
+                    sueldo_base: $("#txtSueldo").val(),
+                    nombre_sucursal: $("#selectSucursal").val(),
+                    elementos: opcionesConcatenadas,
+                }),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
@@ -196,6 +202,7 @@
                     if (data.resultado) {
                         tabla_persona.ajax.reload();
                         $('#FormModal').modal('hide');
+                      
                     } else {
                         alert("No se pudo guardar los cambios");
                     }
@@ -207,6 +214,8 @@
 
                 }
             });
+
+            
 
         }
 
@@ -236,12 +245,7 @@
         type: 'GET',
         url: '@Url.Action("ListarSucursales", "Tecnico")',
            success: function (data) {
-               // Agregar la opción correspondiente al nombre de la sucursal
-               //select.append($('<option>', {
-               //    value: data[0].id_sucursal,
-               //    text: data[0].nombre_sucursal,
-               //    selected: true
-               //}));
+
             var combo = $('#selectSucursal');
 
             var selectedValue = combo.val(); // Guarda el valor seleccionado actualmente
@@ -253,7 +257,30 @@
 
             // Agregar cada sucursal a la lista de opciones del combo box
             $.each(data.data, function (i, sucursal) {
-                combo.append($('<option></option>').val(sucursal.split(" - ")[0]).html(sucursal.split(" - ")[2]));
+                combo.append($('<option></option>').val(sucursal.split(" - ")[2]).html(sucursal.split(" - ")[2]));
+            });
+
+            combo.val(selectedValue); // Restaura el valor seleccionado anteriormente
+
+        }
+       });
+
+        $.ajax({
+        type: 'GET',
+        url: '@Url.Action("ListarElementos", "Tecnico")',
+           success: function (data) {
+            var combo = $('#selectElemento');
+
+            var selectedValue = combo.val(); // Guarda el valor seleccionado actualmente
+
+            combo.empty(); // Vaciar el combo
+            // Vacía el select y agrega la opción por defecto
+            combo.empty().append($('<option></option>').val('').html('Seleccione un elemento'));
+
+
+            // Agregar cada elemento a la lista de opciones del combo box
+            $.each(data.data, function (i, elemento) {
+                combo.append($('<option></option>').val(elemento).html(elemento));
             });
 
             combo.val(selectedValue); // Restaura el valor seleccionado anteriormente
@@ -273,7 +300,7 @@
         }
 
 
-         function Eliminar($id_tecnico) {
+        function Eliminar($id_tecnico) {
             if (confirm("¿Realmente desea eliminar?")) {
                 jQuery.ajax({
                     url: "@Url.Action("Eliminar", "Tecnico")" + "?idtecnico=" + $id_tecnico,
@@ -291,6 +318,33 @@
 
             }
         }
+
+        $(function () {
+            obtenerOpcionesDisponibles();
+        });
+
+        function obtenerOpcionesDisponibles() {
+            $.ajax({
+                url:  '@Url.Action("ListarElementos", "Tecnico")',
+                type: 'GET',
+                success: function (data) {
+                    var selectDisponible = $('#select-disponible');                    
+                    selectDisponible.empty();
+                    $.each(data.data, function (index, opcion) {
+                        selectDisponible.append($('<option></option>').val(opcion).text(opcion));
+                    });
+                }
+            });
+        }
+
+        $('#btn-agregar').on('click', function () {
+            $('#select-disponible option:selected').appendTo('#select-seleccionado');
+        });
+
+        $('#btn-quitar').on('click', function () {
+            $('#select-seleccionado option:selected').appendTo('#select-disponible');
+        });
+
 
 
     </script>
