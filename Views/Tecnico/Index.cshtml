@@ -148,8 +148,7 @@
         });
 
 
-        function abrirModal($id_tecnico) {
-            alert($id_tecnico);
+        function abrirModal($id_tecnico) {            
             $("#txtIdTecnico").val($id_tecnico);
             if ($id_tecnico != 0) {
 
@@ -182,8 +181,7 @@
 
         function Guardar() {
             var opcionesSeleccionadas = $('#select-seleccionado').val();
-            var opcionesConcatenadas = opcionesSeleccionadas.join(',');
-            console.log(parseInt($("#txtIdTecnico").val()));  
+            var opcionesConcatenadas = opcionesSeleccionadas.join(',');            
             jQuery.ajax({
                 url: "@Url.Action("Guardar", "Tecnico")",
                 type: "POST",
